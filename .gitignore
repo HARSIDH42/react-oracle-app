@@ -1,0 +1,62 @@
+#################################
+# Root / Common
+#################################
+.env
+.env.*
+*.log
+logs/
+.DS_Store
+Thumbs.db
+
+#################################
+# Node.js (Backend)
+#################################
+backend/node_modules/
+backend/npm-debug.log*
+backend/yarn-debug.log*
+backend/yarn-error.log*
+backend/pnpm-debug.log*
+backend/dist/
+backend/build/
+backend/coverage/
+
+#################################
+# React (Frontend)
+#################################
+frontend/node_modules/
+frontend/build/
+frontend/dist/
+frontend/.env
+frontend/.env.*
+frontend/npm-debug.log*
+frontend/yarn-debug.log*
+frontend/yarn-error.log*
+frontend/pnpm-debug.log*
+frontend/coverage/
+
+#################################
+# IDE / Editor
+#################################
+.vscode/
+.idea/
+*.swp
+
+#################################
+# Package manager caches
+#################################
+**/.npm/
+**/.yarn/
+**/.pnpm-store/
+
+#################################
+# Terraform / AWS (if any)
+#################################
+*.tfstate
+*.tfstate.*
+.terraform/
+.terraform.lock.hcl
+
+#################################
+# Docker
+#################################
+**/*-debug.log
