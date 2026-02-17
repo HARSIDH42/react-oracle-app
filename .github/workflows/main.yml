@@ -20,9 +20,11 @@ jobs:
 
       - name: Install Dependencies
         run: npm install
+        working-directory: frontend
 
       - name: Build React App
         run: npm run build
+        working-directory: frontend
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
@@ -32,5 +34,5 @@ jobs:
           aws-region: ap-south-1
 
       - name: Deploy to S3
-        run: |
-          aws s3 sync build/ s3://${{ secrets.S3_BUCKET_NAME }} --delete
+        run: aws s3 sync build/ s3://${{ secrets.S3_BUCKET_NAME }} --delete
+        working-directory: frontend
