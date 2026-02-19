@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "./App.css";
 
-const API_URL = "https://xxxxx.execute-api.ap-south-1.amazonaws.com/prod";
+const API_URL = "https://5197hw05bi.execute-api.ap-south-1.amazonaws.com/prod";
 
 function App() {
   const [employees, setEmployees] = useState([]);
