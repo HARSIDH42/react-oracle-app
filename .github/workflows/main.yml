@@ -18,85 +18,14 @@ jobs:
         with:
           node-version: 18
 
-      # ✅ Install Groq SDK
-      - name: Setup Python for AI
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.11"
-
-      - name: Install Groq SDK
-        run: pip install groq
-
-      # ✅ AI EDITS ONLY FRONTEND SOURCE
-      - name: Groq AI Improve React Frontend
-        env:
-          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
-        run: |
-          python << 'EOF'
-          import os
-          from pathlib import Path
-          from groq import Groq
-          
-          client = Groq(api_key=os.environ["GROQ_API_KEY"])
-          
-          frontend = Path("frontend/src")
-          
-          files = list(frontend.rglob("*.jsx")) + \
-                  list(frontend.rglob("*.js")) + \
-                  list(frontend.rglob("*.css"))
-          
-          for file in files:
-              code = file.read_text(encoding="utf-8")
-          
-              prompt = f"""
-          You are a senior React engineer.
-          
-          Improve this React code with:
-          - modern UI improvements
-          - better component structure
-          - accessibility fixes
-          - performance optimization
-          - clean styling
-          - responsive layout
-          - modern 2026 UX
-          
-          RULES:
-          - DO NOT change logic
-          - DO NOT break imports
-          - DO NOT rename files
-          - Return ONLY updated code
-          - Keep React functional components
-          
-          CODE:
-          {code}
-          """
-          
-              completion = client.chat.completions.create(
-                  model="moonshotai/kimi-k2-instruct-0905",
-                  messages=[{"role": "user", "content": prompt}],
-                  temperature=0.4,
-                  max_tokens=4096
-              )
-          
-              updated = completion.choices[0].message.content
-          
-              if updated:
-                  file.write_text(updated.strip(), encoding="utf-8")
-                  print(f"Updated {file}")
-          
-          EOF
-
-      # ✅ Install React dependencies
       - name: Install Dependencies
         run: npm install
         working-directory: frontend
 
-      # ✅ Build React App
       - name: Build React App
         run: npm run build
         working-directory: frontend
 
-      # ✅ AWS Login
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
@@ -104,13 +33,9 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ap-south-1
 
-      # ✅ Deploy
       - name: Deploy to S3
         run: aws s3 sync build/ s3://${{ secrets.S3_BUCKET_NAME }} --delete
         working-directory: frontend
 
-      # ✅ CloudFront Refresh
       - name: Invalidate CloudFront Cache
-        run: aws cloudfront create-invalidation \
-          --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} \
-          --paths "/*"
+        run: aws cloudfront create-invalidation --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} --paths "/*"
