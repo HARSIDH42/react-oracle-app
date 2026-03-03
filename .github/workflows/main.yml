@@ -33,58 +33,58 @@ jobs:
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
         run: |
           python << 'EOF'
-import os
-from pathlib import Path
-from groq import Groq
-
-client = Groq(api_key=os.environ["GROQ_API_KEY"])
-
-frontend = Path("frontend/src")
-
-files = list(frontend.rglob("*.jsx")) + \
-        list(frontend.rglob("*.js")) + \
-        list(frontend.rglob("*.css"))
-
-for file in files:
-    code = file.read_text(encoding="utf-8")
-
-    prompt = f"""
-You are a senior React engineer.
-
-Improve this React code with:
-- modern UI improvements
-- better component structure
-- accessibility fixes
-- performance optimization
-- clean styling
-- responsive layout
-- modern 2026 UX
-
-RULES:
-- DO NOT change logic
-- DO NOT break imports
-- DO NOT rename files
-- Return ONLY updated code
-- Keep React functional components
-
-CODE:
-{code}
-"""
-
-    completion = client.chat.completions.create(
-        model="moonshotai/kimi-k2-instruct-0905",
-        messages=[{"role": "user", "content": prompt}],
-        temperature=0.4,
-        max_tokens=4096
-    )
-
-    updated = completion.choices[0].message.content
-
-    if updated:
-        file.write_text(updated.strip(), encoding="utf-8")
-        print(f"Updated {file}")
-
-EOF
+          import os
+          from pathlib import Path
+          from groq import Groq
+          
+          client = Groq(api_key=os.environ["GROQ_API_KEY"])
+          
+          frontend = Path("frontend/src")
+          
+          files = list(frontend.rglob("*.jsx")) + \
+                  list(frontend.rglob("*.js")) + \
+                  list(frontend.rglob("*.css"))
+          
+          for file in files:
+              code = file.read_text(encoding="utf-8")
+          
+              prompt = f"""
+          You are a senior React engineer.
+          
+          Improve this React code with:
+          - modern UI improvements
+          - better component structure
+          - accessibility fixes
+          - performance optimization
+          - clean styling
+          - responsive layout
+          - modern 2026 UX
+          
+          RULES:
+          - DO NOT change logic
+          - DO NOT break imports
+          - DO NOT rename files
+          - Return ONLY updated code
+          - Keep React functional components
+          
+          CODE:
+          {code}
+          """
+          
+              completion = client.chat.completions.create(
+                  model="moonshotai/kimi-k2-instruct-0905",
+                  messages=[{"role": "user", "content": prompt}],
+                  temperature=0.4,
+                  max_tokens=4096
+              )
+          
+              updated = completion.choices[0].message.content
+          
+              if updated:
+                  file.write_text(updated.strip(), encoding="utf-8")
+                  print(f"Updated {file}")
+          
+          EOF
 
       # ✅ Install React dependencies
       - name: Install Dependencies
