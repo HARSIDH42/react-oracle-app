@@ -1,10 +1,15 @@
-export default function Header() {
+export default function Header({ cart }) {
   return (
-    <header className="header">
-      <div className="logo">MODERN.STORE</div>
-      <nav>
-        <button className="cart-btn">Cart (0)</button>
+    <header className="navbar">
+      <div className="logo">MODERN<span>STORE</span></div>
+      <nav className="nav-links">
+        <a href="#">Products</a>
+        <a href="#">Support</a>
       </nav>
+      <div className="cart-btn">
+        <span>Cart</span>
+        <div className="cart-counter">{cart}</div>
+      </div>
     </header>
   )
 }

@@ -1,79 +1,93 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap');
+
 body {
-  font-family: 'Inter', -apple-system, sans-serif;
   margin: 0;
-  background: #fafafa;
-  color: #333;
+  font-family: 'Inter', sans-serif;
+  background: #fdfdfd;
+  color: #1a1a1a;
 }
 
-.container {
-  max-width: 1000px;
-  margin: 0 auto;
-  padding: 40px 20px;
-}
-
-.header {
+.navbar {
+  backdrop-filter: blur(15px);
+  background: rgba(255, 255, 255, 0.8);
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding-bottom: 40px;
+  padding: 20px 80px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
 }
 
-.logo {
-  font-weight: 800;
-  letter-spacing: -1px;
-  font-size: 1.5rem;
-}
+.logo { font-weight: 800; letter-spacing: -1px; }
+.logo span { color: #6366f1; }
 
-.hero-title {
-  margin-bottom: 30px;
-  font-size: 2rem;
-}
-
-.products {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 25px;
-}
-
-.card {
-  background: white;
-  padding: 20px;
-  border-radius: 16px;
-  border: 1px solid #eee;
-  text-align: center;
-  transition: transform 0.2s;
-}
-
-.card:hover {
-  transform: translateY(-5px);
-}
-
-.card-image {
-  font-size: 3rem;
-  margin-bottom: 15px;
-}
-
-.price {
-  font-weight: bold;
-  color: #555;
-  margin: 10px 0;
-}
-
-.add-btn {
-  background: #000;
-  color: white;
-  border: none;
-  padding: 12px 20px;
-  border-radius: 8px;
-  width: 100%;
-  cursor: pointer;
+.cart-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
   font-weight: 600;
 }
 
-.cart-btn {
-  background: none;
-  border: 1px solid #ddd;
-  padding: 8px 16px;
+.cart-counter {
+  background: #000;
+  color: #fff;
+  padding: 4px 12px;
   border-radius: 20px;
-  cursor: pointer;
+  font-size: 12px;
 }
+
+.hero {
+  text-align: center;
+  padding: 120px 20px;
+}
+
+.badge {
+  background: #eef2ff;
+  color: #4f46e5;
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.hero h1 { font-size: 64px; margin: 20px 0; letter-spacing: -2px; }
+.hero h1 span { color: #6366f1; }
+
+.products {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 40px;
+  padding: 0 80px 100px;
+}
+
+.card {
+  background: #fff;
+  border-radius: 24px;
+  padding: 40px;
+  text-align: center;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  border: 1px solid #f0f0f0;
+}
+
+.card:hover {
+  transform: translateY(-12px);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+}
+
+.card-icon { font-size: 48px; margin-bottom: 20px; }
+.price { font-weight: 800; font-size: 18px; margin: 10px 0 20px; }
+
+.add-btn {
+  background: #111;
+  color: white;
+  border: none;
+  padding: 14px 30px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.3s;
+}
+
+.add-btn:hover { background: #4f46e5; }

@@ -1,25 +1,38 @@
-import Header from "./components/Header.jsx"
-import ProductCard from "./components/ProductCard.jsx"
+import { useState } from "react"
+import Header from "./components/Header"
+import ProductCard from "./components/ProductCard"
 import "./styles.css"
 
 export default function App() {
+  const [cart, setCart] = useState(0)
+
+  const addToCart = () => setCart(prev => prev + 1)
+
   const products = [
-    { id: 1, name: "Minimalist Watch", price: "$120", img: "⌚" },
-    { id: 2, name: "Wireless Headphones", price: "$199", img: "🎧" },
-    { id: 3, name: "Smart Speaker", price: "$89", img: "🔊" },
-    { id: 4, name: "Leather Wallet", price: "$45", img: "💼" },
+    { name: "Zenith Watch", price: "$299", icon: "⌚" },
+    { name: "Sonic Headphones", price: "$349", icon: "🎧" },
+    { name: "Aura Speaker", price: "$159", icon: "🔊" },
+    { name: "Vision Pro", price: "$899", icon: "🥽" },
+    { name: "Focus Tablet", price: "$499", icon: "📱" },
+    { name: "Orbit Mouse", price: "$89", icon: "🖱️" }
   ]
 
   return (
-    <div className="container">
-      <Header />
+    <div className="app">
+      <Header cart={cart} />
+      
       <main>
-        <h1 className="hero-title">Discover Our Collection</h1>
-        <div className="products">
-          {products.map((p) => (
-            <ProductCard key={p.id} name={p.name} price={p.price} icon={p.img} />
+        <section className="hero">
+          <span className="badge">New Collection 2024</span>
+          <h1>Engineered for <br /><span>Excellence.</span></h1>
+          <p>Discover a curated selection of premium electronics designed to elevate your daily workflow.</p>
+        </section>
+
+        <section className="products">
+          {products.map((p, i) => (
+            <ProductCard key={i} {...p} addToCart={addToCart} />
           ))}
-        </div>
+        </section>
       </main>
     </div>
   )
