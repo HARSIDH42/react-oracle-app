@@ -1,4 +1,4 @@
-name: Gemini AI Create React App and Deploy
+name: Gemini AI Create Modern React App and Deploy
 
 on:
   push:
@@ -12,18 +12,17 @@ jobs:
       contents: write
 
     steps:
+
       - name: Checkout Repo
         uses: actions/checkout@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      # Setup Node
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: 20
 
-      # Setup Python
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
@@ -32,16 +31,16 @@ jobs:
       - name: Install Gemini SDK
         run: pip install --upgrade google-genai
 
-      # Create new React app
-      - name: Create New React App
+      # Create new React Vite project
+      - name: Create React App
         run: |
           rm -rf ai-react-app
           npm create vite@latest ai-react-app -- --template react
           cd ai-react-app
           npm install
 
-      # Gemini AI generates React components
-      - name: Generate React UI using Gemini
+      # Gemini generates modern UI
+      - name: Generate Modern React UI using Gemini
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: |
@@ -53,93 +52,153 @@ jobs:
           from google import genai
 
           prompt = """
-          Create a modern React e-commerce UI.
+          ROLE
+          You are a senior frontend engineer creating a premium modern React storefront.
 
-          IMPORTANT:
-          All React components MUST use default export.
-          Example: export default function ComponentName() {}
+          REQUIREMENTS
+          - React + Vite
+          - Functional components
+          - Modern UI
+          - Hero section
+          - Responsive product grid
+          - Cart counter
+          - Glassmorphism navbar
+          - Smooth hover animations
+          - Clean typography
 
-          Files to generate:
+          IMPORTANT
+          All components MUST use default export.
+
+          OUTPUT FORMAT
 
           ---ai-react-app/src/App.jsx---
-          import Header from "./components/Header.jsx"
-          import ProductCard from "./components/ProductCard.jsx"
+          import { useState } from "react"
+          import Header from "./components/Header"
+          import ProductCard from "./components/ProductCard"
           import "./styles.css"
 
           export default function App() {
+
+            const [cart,setCart] = useState(0)
+
+            const addToCart = () => {
+              setCart(cart + 1)
+            }
+
+            const products = [
+              {name:"Minimal Watch",price:"$120",icon:"⌚"},
+              {name:"Wireless Headphones",price:"$199",icon:"🎧"},
+              {name:"Smart Speaker",price:"$99",icon:"🔊"},
+              {name:"VR Headset",price:"$399",icon:"🥽"}
+            ]
+
             return (
-              <div>
-                <Header />
-                <h1>AI React Store</h1>
-                <div className="products">
-                  <ProductCard name="Product 1" price="$20" />
-                  <ProductCard name="Product 2" price="$30" />
-                </div>
+              <div className="app">
+
+                <Header cart={cart}/>
+
+                <section className="hero">
+                  <h1>Discover Modern Tech</h1>
+                  <p>Premium devices for everyday life</p>
+                </section>
+
+                <section className="products">
+                  {products.map((p,i)=>(
+                    <ProductCard key={i} {...p} addToCart={addToCart}/>
+                  ))}
+                </section>
+
               </div>
             )
           }
 
           ---ai-react-app/src/components/Header.jsx---
-          export default function Header() {
+          export default function Header({cart}) {
             return (
               <header className="header">
-                <h2>AI Store</h2>
-                <span className="cart">Cart (0)</span>
+                <div className="logo">MODERN.STORE</div>
+                <div className="cart">🛒 {cart}</div>
               </header>
             )
           }
 
           ---ai-react-app/src/components/ProductCard.jsx---
-          export default function ProductCard({ name, price }) {
+          export default function ProductCard({name,price,icon,addToCart}) {
             return (
               <div className="card">
+                <div className="icon">{icon}</div>
                 <h3>{name}</h3>
                 <p>{price}</p>
-                <button>Add to Cart</button>
+                <button onClick={addToCart}>Add to Cart</button>
               </div>
             )
           }
 
           ---ai-react-app/src/styles.css---
-          body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 20px;
-            background: #f5f5f5;
+          body{
+            margin:0;
+            font-family:Inter,system-ui;
+            background:linear-gradient(135deg,#f3f4f6,#e5e7eb);
           }
 
-          .header {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 30px;
+          .header{
+            backdrop-filter:blur(10px);
+            background:rgba(255,255,255,.6);
+            display:flex;
+            justify-content:space-between;
+            padding:20px 40px;
+            position:sticky;
+            top:0;
           }
 
-          .products {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px,1fr));
-            gap: 20px;
+          .logo{
+            font-weight:bold;
+            font-size:20px;
           }
 
-          .card {
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+          .hero{
+            text-align:center;
+            padding:80px 20px;
           }
 
-          button {
-            background: black;
-            color: white;
-            border: none;
-            padding: 10px;
-            cursor: pointer;
+          .hero h1{
+            font-size:48px;
+          }
+
+          .products{
+            display:grid;
+            grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+            gap:30px;
+            padding:40px;
+          }
+
+          .card{
+            background:white;
+            border-radius:16px;
+            padding:30px;
+            text-align:center;
+            transition:.3s;
+            box-shadow:0 10px 25px rgba(0,0,0,.1);
+          }
+
+          .card:hover{
+            transform:translateY(-8px);
+          }
+
+          button{
+            background:black;
+            color:white;
+            border:none;
+            padding:12px 20px;
+            border-radius:8px;
+            cursor:pointer;
           }
           """
 
           client = genai.Client(api_key=os.environ["GEMINI_API_KEY"])
 
           response = client.models.generate_content(
-              model="gemini-3-flash-preview",
+              model="gemini-3.1-flash-lite-preview",
               contents=prompt
           )
 
@@ -163,23 +222,20 @@ jobs:
           result = subprocess.run(["git","diff","--cached","--quiet"])
 
           if result.returncode != 0:
-              subprocess.run(["git","commit","-m","Gemini AI generated React UI"])
+              subprocess.run(["git","commit","-m","Gemini AI generated modern React UI"])
               subprocess.run(["git","push"])
           EOF
 
-      # Install dependencies
       - name: Install Dependencies
         run: |
           cd ai-react-app
           npm install
 
-      # Build React
       - name: Build React App
         run: |
           cd ai-react-app
           npm run build
 
-      # AWS login
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
@@ -187,12 +243,10 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ap-south-1
 
-      # Deploy to S3 using secret bucket name
       - name: Deploy to S3
         run: |
           aws s3 sync ai-react-app/dist s3://${{ secrets.S3_BUCKET_NAME }} --delete
 
-      # Clear CloudFront cache
       - name: Invalidate CloudFront Cache
         run: |
           aws cloudfront create-invalidation \
