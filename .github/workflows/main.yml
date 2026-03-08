@@ -1,4 +1,4 @@
-name: Gemini AI React Auto Commit and Deploy
+name: Gemini AI Create React App and Deploy
 
 on:
   push:
@@ -11,25 +11,19 @@ jobs:
     permissions:
       contents: write
 
-    defaults:
-      run:
-        working-directory: frontend
-
     steps:
-      - name: Checkout Repository
+      - name: Checkout Repo
         uses: actions/checkout@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      # Node setup
+      # Setup Node
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: npm
-          cache-dependency-path: frontend/package-lock.json
 
-      # Python for Gemini
+      # Setup Python
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
@@ -37,81 +31,50 @@ jobs:
 
       - name: Install Gemini SDK
         run: pip install --upgrade google-genai
-        working-directory: .
 
-      # Gemini AI generates React UI
-      - name: Run Gemini AI to Generate React UI
+      # Create new React app
+      - name: Create New React App
+        run: |
+          rm -rf ai-react-app
+          npm create vite@latest ai-react-app -- --template react
+          cd ai-react-app
+          npm install
+
+      # Gemini AI generates React files
+      - name: Generate React UI using Gemini
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: |
           python << 'EOF'
           import os
-          import subprocess
           import re
+          import subprocess
           from pathlib import Path
           from google import genai
 
-          image_dir = Path("frontend/public/assets/images/products")
-          image_dir.mkdir(parents=True, exist_ok=True)
+          prompt = """
+          Create a modern React e-commerce UI.
 
-          image_files = [
-              f.name for f in image_dir.glob("*")
-              if f.suffix.lower() in [".jpg",".jpeg",".png",".webp"]
-          ]
+          Requirements:
+          - React functional components
+          - Header with cart counter
+          - Product cards
+          - Responsive grid layout
+          - Clean Apple-style UI
 
-          image_list = "\n".join(image_files) if image_files else "No images available"
+          Output format:
 
-          prompt = f"""
-          ROLE
-          You are a senior React engineer building a premium 2026 modern e-commerce storefront.
+          ---ai-react-app/src/App.jsx---
+          full code
 
-          BRAND NAME
-          E-commerce platform
+          ---ai-react-app/src/components/Header.jsx---
+          full code
 
-          REQUIREMENTS
-          - Use ReactJS with Vite
-          - Functional components with hooks
-          - Live cart counter
-          - Cart in localStorage
-          - Product search filtering
-          - Cart drawer animation
-          - Responsive CSS grid
+          ---ai-react-app/src/components/ProductCard.jsx---
+          full code
 
-          DESIGN
-          - Glassmorphism header
-          - Large hero section
-          - Product hover animation
-          - Apple style minimal UI
-
-          IMAGES
-          public/assets/images/products/
-
-          Available images:
-          {image_list}
-
-          PROJECT STRUCTURE
-
-          ---frontend/package.json---
-
-          ---frontend/index.html---
-
-          ---frontend/src/main.jsx---
-
-          ---frontend/src/App.jsx---
-
-          ---frontend/src/components/Header.jsx---
-
-          ---frontend/src/components/ProductGrid.jsx---
-
-          ---frontend/src/components/CartDrawer.jsx---
-
-          ---frontend/src/components/SearchBar.jsx---
-
-          ---frontend/src/data/products.js---
-
-          ---frontend/src/styles.css---
-
-          Output full working React Vite project.
+          ---ai-react-app/src/styles.css---
+          full code
           """
 
           client = genai.Client(api_key=os.environ["GEMINI_API_KEY"])
@@ -144,17 +107,20 @@ jobs:
               subprocess.run(["git","commit","-m","Gemini AI generated React UI"])
               subprocess.run(["git","push"])
           EOF
-        working-directory: .
 
-      # Install React dependencies
+      # Install dependencies
       - name: Install Dependencies
-        run: npm install
+        run: |
+          cd ai-react-app
+          npm install
 
-      # Build React
+      # Build React app
       - name: Build React App
-        run: npm run build
+        run: |
+          cd ai-react-app
+          npm run build
 
-      # AWS credentials
+      # Configure AWS
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
@@ -162,14 +128,12 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ap-south-1
 
-      # Deploy build to S3
+      # Deploy to S3 (bucket name written directly)
       - name: Deploy to S3
         run: |
-          aws s3 sync build/ s3://${{ secrets.S3_BUCKET_NAME }} \
-          --delete \
-          --cache-control "max-age=31536000"
+          aws s3 sync ai-react-app/dist s3://staticwebzsitegit --delete
 
-      # Clear CloudFront cache
+      # Invalidate CloudFront
       - name: Invalidate CloudFront Cache
         run: |
           aws cloudfront create-invalidation \
