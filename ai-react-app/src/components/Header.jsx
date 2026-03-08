@@ -1,16 +1,10 @@
-```jsx
-import React from 'react';
-
-export default function Header({ cartCount }) {
+export default function Header() {
   return (
     <header className="header">
-      <nav className="nav container">
-        <div className="logo">Store.</div>
-        <div className="cart-icon">
-          Bag {cartCount > 0 && <span className="badge">{cartCount}</span>}
-        </div>
+      <div className="logo">MODERN.STORE</div>
+      <nav>
+        <button className="cart-btn">Cart (0)</button>
       </nav>
     </header>
-  );
+  )
 }
-```

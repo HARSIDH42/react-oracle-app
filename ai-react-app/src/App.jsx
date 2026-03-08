@@ -1,33 +1,26 @@
-```jsx
-import React, { useState } from 'react';
-import Header from './components/Header';
-import ProductCard from './components/ProductCard';
-import './styles.css';
-
-const products = [
-  { id: 1, name: 'Pro Headphones', price: 299, image: '🎧' },
-  { id: 2, name: 'Smart Watch', price: 399, image: '⌚' },
-  { id: 3, name: 'Laptop Pro', price: 1299, image: '💻' },
-  { id: 4, name: 'Tablet Air', price: 599, image: '📱' },
-];
+import Header from "./components/Header.jsx"
+import ProductCard from "./components/ProductCard.jsx"
+import "./styles.css"
 
 export default function App() {
-  const [cartCount, setCartCount] = useState(0);
-
-  const addToCart = () => setCartCount(prev => prev + 1);
+  const products = [
+    { id: 1, name: "Minimalist Watch", price: "$120", img: "⌚" },
+    { id: 2, name: "Wireless Headphones", price: "$199", img: "🎧" },
+    { id: 3, name: "Smart Speaker", price: "$89", img: "🔊" },
+    { id: 4, name: "Leather Wallet", price: "$45", img: "💼" },
+  ]
 
   return (
-    <div className="app">
-      <Header cartCount={cartCount} />
-      <main className="container">
-        <h1>Latest Arrivals</h1>
-        <div className="product-grid">
-          {products.map(product => (
-            <ProductCard key={product.id} product={product} onAdd={addToCart} />
+    <div className="container">
+      <Header />
+      <main>
+        <h1 className="hero-title">Discover Our Collection</h1>
+        <div className="products">
+          {products.map((p) => (
+            <ProductCard key={p.id} name={p.name} price={p.price} icon={p.img} />
           ))}
         </div>
       </main>
     </div>
-  );
+  )
 }
-```

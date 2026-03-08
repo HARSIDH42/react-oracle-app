@@ -1,14 +1,10 @@
-```jsx
-import React from 'react';
-
-export default function ProductCard({ product, onAdd }) {
+export default function ProductCard({ name, price, icon }) {
   return (
-    <div className="product-card">
-      <div className="product-image">{product.image}</div>
-      <h3>{product.name}</h3>
-      <p>${product.price}</p>
-      <button className="add-btn" onClick={onAdd}>Add to Cart</button>
+    <div className="card">
+      <div className="card-image">{icon}</div>
+      <h3>{name}</h3>
+      <p className="price">{price}</p>
+      <button className="add-btn">Add to Cart</button>
     </div>
-  );
+  )
 }
-```
