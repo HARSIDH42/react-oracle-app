@@ -31,7 +31,6 @@ jobs:
       - name: Install Gemini SDK
         run: pip install --upgrade google-genai
 
-      # Create new React Vite project
       - name: Create React App
         run: |
           rm -rf ai-react-app
@@ -39,7 +38,6 @@ jobs:
           cd ai-react-app
           npm install
 
-      # Gemini generates modern UI
       - name: Generate Modern React UI using Gemini
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
@@ -53,23 +51,26 @@ jobs:
 
           prompt = """
           ROLE
-          You are a senior frontend engineer creating a premium modern React storefront.
+          You are a senior React frontend engineer creating a premium DESKTOP-FIRST e-commerce storefront.
 
-          REQUIREMENTS
-          - React + Vite
-          - Functional components
-          - Modern UI
-          - Hero section
-          - Responsive product grid
-          - Cart counter
-          - Glassmorphism navbar
-          - Smooth hover animations
-          - Clean typography
+          CRITICAL RULES
+          - Desktop-first layout
+          - Landscape design
+          - Max container width 1400px
+          - Centered layout
+          - 4 column product grid on desktop
+          - 2 columns tablet
+          - 1 column mobile
+          - Hero section full width
+          - Modern typography
+
+          DESIGN STYLE
+          Apple / Stripe / Shopify style.
 
           IMPORTANT
-          All components MUST use default export.
+          All React components MUST use default export.
 
-          OUTPUT FORMAT
+          FILE OUTPUT
 
           ---ai-react-app/src/App.jsx---
           import { useState } from "react"
@@ -77,121 +78,215 @@ jobs:
           import ProductCard from "./components/ProductCard"
           import "./styles.css"
 
-          export default function App() {
+          export default function App(){
 
-            const [cart,setCart] = useState(0)
+          const [cart,setCart] = useState(0)
 
-            const addToCart = () => {
-              setCart(cart + 1)
-            }
+          const addToCart=()=>setCart(cart+1)
 
-            const products = [
-              {name:"Minimal Watch",price:"$120",icon:"⌚"},
-              {name:"Wireless Headphones",price:"$199",icon:"🎧"},
-              {name:"Smart Speaker",price:"$99",icon:"🔊"},
-              {name:"VR Headset",price:"$399",icon:"🥽"}
-            ]
+          const products=[
+          {name:"Zenith Watch",price:"$120",icon:"⌚"},
+          {name:"Studio Headphones",price:"$199",icon:"🎧"},
+          {name:"Smart Speaker",price:"$99",icon:"🔊"},
+          {name:"VR Headset",price:"$399",icon:"🥽"},
+          {name:"Wireless Mouse",price:"$49",icon:"🖱️"},
+          {name:"Mechanical Keyboard",price:"$159",icon:"⌨️"},
+          {name:"Drone Camera",price:"$499",icon:"🚁"},
+          {name:"4K Monitor",price:"$799",icon:"🖥️"}
+          ]
 
-            return (
-              <div className="app">
+          return(
+          <div>
 
-                <Header cart={cart}/>
+          <Header cart={cart}/>
 
-                <section className="hero">
-                  <h1>Discover Modern Tech</h1>
-                  <p>Premium devices for everyday life</p>
-                </section>
+          <section className="hero">
+          <div className="container">
+          <h1>Engineered for <span>Excellence.</span></h1>
+          <p>Discover a curated selection of premium electronics designed to elevate your daily workflow.</p>
+          </div>
+          </section>
 
-                <section className="products">
-                  {products.map((p,i)=>(
-                    <ProductCard key={i} {...p} addToCart={addToCart}/>
-                  ))}
-                </section>
+          <section className="container grid">
+          {products.map((p,i)=>(
+          <ProductCard key={i} {...p} addToCart={addToCart}/>
+          ))}
+          </section>
 
-              </div>
-            )
+          </div>
+          )
           }
 
           ---ai-react-app/src/components/Header.jsx---
-          export default function Header({cart}) {
-            return (
-              <header className="header">
-                <div className="logo">MODERN.STORE</div>
-                <div className="cart">🛒 {cart}</div>
-              </header>
-            )
+          export default function Header({cart}){
+
+          return(
+          <header className="header">
+
+          <div className="container nav">
+
+          <div className="logo">
+          MODERN<span>STORE</span>
+          </div>
+
+          <nav className="links">
+          <a>Products</a>
+          <a>Support</a>
+          </nav>
+
+          <div className="cart">
+          Cart <span>{cart}</span>
+          </div>
+
+          </div>
+
+          </header>
+          )
           }
 
           ---ai-react-app/src/components/ProductCard.jsx---
-          export default function ProductCard({name,price,icon,addToCart}) {
-            return (
-              <div className="card">
-                <div className="icon">{icon}</div>
-                <h3>{name}</h3>
-                <p>{price}</p>
-                <button onClick={addToCart}>Add to Cart</button>
-              </div>
-            )
+          export default function ProductCard({name,price,icon,addToCart}){
+
+          return(
+          <div className="card">
+
+          <div className="icon">{icon}</div>
+
+          <h3>{name}</h3>
+
+          <p>{price}</p>
+
+          <button onClick={addToCart}>
+          Add to Cart
+          </button>
+
+          </div>
+          )
           }
 
           ---ai-react-app/src/styles.css---
+
           body{
-            margin:0;
-            font-family:Inter,system-ui;
-            background:linear-gradient(135deg,#f3f4f6,#e5e7eb);
+          margin:0;
+          font-family:Inter,system-ui;
+          background:#f5f6fa;
+          }
+
+          .container{
+          max-width:1400px;
+          margin:auto;
+          padding:0 40px;
           }
 
           .header{
-            backdrop-filter:blur(10px);
-            background:rgba(255,255,255,.6);
-            display:flex;
-            justify-content:space-between;
-            padding:20px 40px;
-            position:sticky;
-            top:0;
+          background:white;
+          border-bottom:1px solid #eee;
+          }
+
+          .nav{
+          display:flex;
+          align-items:center;
+          justify-content:space-between;
+          height:70px;
           }
 
           .logo{
-            font-weight:bold;
-            font-size:20px;
+          font-weight:700;
+          font-size:20px;
+          }
+
+          .logo span{
+          color:#6366f1;
+          }
+
+          .links{
+          display:flex;
+          gap:30px;
+          }
+
+          .cart span{
+          background:black;
+          color:white;
+          padding:4px 10px;
+          border-radius:20px;
+          margin-left:6px;
           }
 
           .hero{
-            text-align:center;
-            padding:80px 20px;
+          padding:120px 0 60px;
           }
 
           .hero h1{
-            font-size:48px;
+          font-size:64px;
           }
 
-          .products{
-            display:grid;
-            grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
-            gap:30px;
-            padding:40px;
+          .hero span{
+          color:#6366f1;
+          }
+
+          .hero p{
+          font-size:18px;
+          margin-top:20px;
+          max-width:600px;
+          }
+
+          .grid{
+          display:grid;
+          grid-template-columns:repeat(4,1fr);
+          gap:30px;
+          margin-top:40px;
           }
 
           .card{
-            background:white;
-            border-radius:16px;
-            padding:30px;
-            text-align:center;
-            transition:.3s;
-            box-shadow:0 10px 25px rgba(0,0,0,.1);
+          background:white;
+          border-radius:16px;
+          padding:30px;
+          text-align:center;
+          transition:.25s;
+          box-shadow:0 10px 20px rgba(0,0,0,.08);
           }
 
           .card:hover{
-            transform:translateY(-8px);
+          transform:translateY(-6px);
+          }
+
+          .icon{
+          font-size:48px;
+          margin-bottom:20px;
           }
 
           button{
-            background:black;
-            color:white;
-            border:none;
-            padding:12px 20px;
-            border-radius:8px;
-            cursor:pointer;
+          margin-top:12px;
+          background:black;
+          color:white;
+          border:none;
+          padding:12px 18px;
+          border-radius:8px;
+          cursor:pointer;
+          }
+
+          @media(max-width:1000px){
+
+          .grid{
+          grid-template-columns:repeat(2,1fr);
+          }
+
+          .hero h1{
+          font-size:42px;
+          }
+
+          }
+
+          @media(max-width:600px){
+
+          .grid{
+          grid-template-columns:1fr;
+          }
+
+          .hero h1{
+          font-size:32px;
+          }
+
           }
           """
 
@@ -214,16 +309,6 @@ jobs:
               path = Path(filename.strip())
               path.parent.mkdir(parents=True, exist_ok=True)
               path.write_text(content.strip(), encoding="utf-8")
-
-          subprocess.run(["git","config","--global","user.name","gemini-bot"])
-          subprocess.run(["git","config","--global","user.email","bot@example.com"])
-          subprocess.run(["git","add","."])
-
-          result = subprocess.run(["git","diff","--cached","--quiet"])
-
-          if result.returncode != 0:
-              subprocess.run(["git","commit","-m","Gemini AI generated modern React UI"])
-              subprocess.run(["git","push"])
           EOF
 
       - name: Install Dependencies
